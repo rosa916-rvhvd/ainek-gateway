@@ -1,0 +1,68 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ainek-poi-gateway-app-dev
+  annotations:
+    argocd/app-name: ainek-poi-gateway-app-dev
+    backstage.io/kubernetes-id: ainek-poi-gateway-app
+    backstage.io/kubernetes-namespace: ainek
+    janus-idp.io/tekton-enabled : 'true'
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: rosa916-rvhvd/ainek-gateway
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console.apps.rosa916.9nln.p1.openshiftapps.com/dev-pipelines/ns/ainek/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console.apps.rosa916.9nln.p1.openshiftapps.com/k8s/ns/ainek/deployments/ainek-poi-gateway-app
+      title: Deployment
+      icon: web
+    - url: https://devspaces.apps.rosa916.9nln.p1.openshiftapps.com/#https://github.com/rosa916-rvhvd/ainek-gateway?che-editor=che-incubator/che-code/latest&devfilePath=.devfile-vscode.yaml
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:default/ainekeenan"
+  system: workshop-system-ainek
+  providesApis:
+    - gateway-api-ainek
+  consumesApis:
+    - backend-api-ainek
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-ainek
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+    - rh-summit
+spec:
+  owner: "user:default/ainekeenan"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: gateway-api-ainek
+  description: API surface exposed to interact with Backends (summit POIs + parks data) via the Gateway
+  links:
+    - url: http://ainek-poi-gateway-app-ainek.apps.rosa916.9nln.p1.openshiftapps.com/q/swagger-ui
+      title: Swagger UI
+      icon: web
+    - url: https://github.com/rosa916-rvhvd/ainek-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "user:default/ainekeenan"
+  system: workshop-system-ainek
+  definition:
+    $text: https://github.com/rosa916-rvhvd/ainek-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
